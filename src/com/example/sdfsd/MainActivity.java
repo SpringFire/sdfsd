@@ -62,8 +62,8 @@ public class MainActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v == mShutter) {
-			//mCameraModule.capture();
-			if(!record) {
+			mCameraModule.capture();
+			/*if(!record) {
 				try {
 					mCameraModule.beginRecording(mSurfaceHolder);
 				} catch (Exception e) {
@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements OnClickListener{
 			} else {
 				mCameraModule.stopRecording();
 				record = false;
-			}
+			}*/
 		}
 	}
 }

@@ -32,6 +32,8 @@ public class CameraModule implements SurfaceHolder.Callback{
     private MainActivity mMainContext;
     private int mCameraId = 0;
     private FocusManager mFocusManager;
+    private static int mCameraState = CameraState.CAMERA_IDLE;
+    
 	public CameraModule(MainActivity mContext) {
 		mMainContext = mContext;
 		mFocusManager = new FocusManager(mContext);
@@ -93,7 +95,8 @@ public class CameraModule implements SurfaceHolder.Callback{
         parameter.setAntibanding(Camera.Parameters.ANTIBANDING_AUTO);
         Size size = parameter.getSupportedPictureSizes().get(0);
         Log.i(TAG, "LMCH0513 h:"+size.height+",w:"+size.width);
-        parameter.setPreviewSize(640, 480);
+        parameter.setPreviewSize(1280, 720);
+        parameter.set("zsl","on");
         parameter.setPictureSize(size.width, size.height);
 		mCameraDevice.setParameters(parameter);
 	}
@@ -111,6 +114,7 @@ public class CameraModule implements SurfaceHolder.Callback{
 		public void onPictureTaken(byte[] data, Camera camera) {
 			// TODO Auto-generated method stub
 			Log.i(TAG, "LMCH0511 picturecallback");
+			setCameraState(CameraState.CAMERA_IDLE);
 			savepic(data,camera);
 			mCameraDevice.startPreview();
 		}
@@ -143,6 +147,8 @@ public class CameraModule implements SurfaceHolder.Callback{
 	}
 	public void capture() {
 		//mCameraDevice.stopPreview();
+		if(mCameraState != CameraState.CAMERA_IDLE) return;
+		setCameraState(CameraState.CAMERA_CAPTURE);
 		updateCameraParameters();
 		mCameraDevice.takePicture(mShutterCallback, null, mPictureCallback);
 	}
@@ -204,5 +210,11 @@ public class CameraModule implements SurfaceHolder.Callback{
             Log.e(TAG, e.toString());
             e.printStackTrace();
         }
+    }
+    public static void setCameraState(int s) {
+    	mCameraState = s;
+    }
+    public static int getCameraState() {
+    	return mCameraState;
     }
 }
